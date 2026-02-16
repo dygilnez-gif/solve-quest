@@ -9,14 +9,14 @@ export const STAGES: Stage[] = [
     title: "Le Parchemin Oublié",
     subtitle: "Un message caché dans les ruines du village...",
     description:
-      "Un ancien parchemin a été dissimulé quelque part dans Konoha par un agent de l'ANBU. Explore le village, retrouve-le et transcris le code qui y est inscrit.",
+      "Un ancien parchemin a été dissimulé quelque part dans Konoha. Explore le village, retrouve-le et transcris le code qui y est inscrit.",
     type: "code",
     icon: "📜",
   },
   {
     id: 2,
-    title: "Les Ombres de l'ANBU",
-    subtitle: "Un message codé par les services secrets...",
+    title: "Les Ombres de Konoha",
+    subtitle: "Un message codé intercepté par nos espions...",
     description:
       "Nos espions ont intercepté un message ennemi, mais il a été chiffré. Les lettres ont été décalées... À toi de percer le code et de révéler le mot caché.",
     type: "cipher",
