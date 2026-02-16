@@ -7,9 +7,9 @@ export const STAGES: Stage[] = [
   {
     id: 1,
     title: "Le Parchemin Oublié",
-    subtitle: "Un message caché dans les ruines du village...",
+    subtitle: "Une énigme trouvée dans les ruines du village...",
     description:
-      "Un ancien parchemin a été dissimulé quelque part dans Konoha. Explore le village, retrouve-le et transcris le code qui y est inscrit.",
+      "Un parchemin a été retrouvé dans les ruines du vieux Konoha. Il porte une énigme dont la réponse est le code d'accès. Trouve le parchemin, résous l'énigme, et entre ta réponse ici.",
     type: "code",
     icon: "📜",
   },
@@ -18,7 +18,7 @@ export const STAGES: Stage[] = [
     title: "Les Ombres de Konoha",
     subtitle: "Un message codé intercepté par nos espions...",
     description:
-      "Nos espions ont intercepté un message ennemi, mais il a été chiffré. Les lettres ont été décalées... À toi de percer le code et de révéler le mot caché.",
+      "Nos espions ont intercepté un message ennemi, mais il est incompréhensible. À toi de percer le code et de révéler le mot caché.",
     type: "cipher",
     cipherText: "VKLUDLNHQ",
     icon: "🔐",
@@ -26,9 +26,9 @@ export const STAGES: Stage[] = [
   {
     id: 3,
     title: "Le Sceau des Anciens",
-    subtitle: "Seule la bonne séquence brisera le sceau...",
+    subtitle: "Un sceau protège l'accès à cette épreuve...",
     description:
-      "Un puissant sceau protège le passage vers l'étape suivante. Pour le briser, tu dois reproduire la séquence exacte de mudras. Observe bien, puis reproduis-la sans te tromper.",
+      "Un puissant sceau protège le passage vers cette épreuve. Un code d'accès a été dissimulé quelque part dans le village — trouve-le pour briser le premier verrou avant d'affronter le véritable défi.",
     type: "memory",
     sequence: [0, 3, 1, 4, 2, 5],
     icon: "🤲",

@@ -1,20 +1,48 @@
 import { useState } from "react";
 import type { Stage } from "../types";
 import { MUDRA_SIGNS } from "../config";
+import { supabase } from "../lib/supabase";
 
 interface Props {
   stage: Stage;
+  playerId: string;
   onSubmit: (answer: string) => Promise<boolean>;
 }
 
-type Phase = "ready" | "showing" | "input" | "fail";
+type Phase = "locked" | "ready" | "showing" | "input" | "fail";
 
-export default function MemoryStage({ stage, onSubmit }: Props) {
-  const [phase, setPhase] = useState<Phase>("ready");
+export default function MemoryStage({ stage, playerId, onSubmit }: Props) {
+  const [phase, setPhase] = useState<Phase>("locked");
+  const [accessCode, setAccessCode] = useState("");
+  const [codeError, setCodeError] = useState(false);
+  const [codeLoading, setCodeLoading] = useState(false);
   const [showIndex, setShowIndex] = useState(-1);
   const [playerSequence, setPlayerSequence] = useState<number[]>([]);
 
   const seq = stage.sequence!;
+
+  const handleAccessCode = async () => {
+    if (!accessCode.trim() || codeLoading) return;
+    setCodeLoading(true);
+    try {
+      const { data, error } = await supabase.rpc("check_access_code", {
+        p_player_id: playerId,
+        p_stage_id: stage.id,
+        p_code: accessCode.trim().toUpperCase(),
+      });
+      const parsed = typeof data === "string" ? JSON.parse(data) : data;
+      if (!error && parsed?.valid) {
+        setPhase("ready");
+      } else {
+        setCodeError(true);
+        setTimeout(() => setCodeError(false), 600);
+      }
+    } catch {
+      setCodeError(true);
+      setTimeout(() => setCodeError(false), 600);
+    }
+    setCodeLoading(false);
+  };
 
   const startShow = () => {
     setPhase("showing");
@@ -52,9 +80,67 @@ export default function MemoryStage({ stage, onSubmit }: Props) {
     }
   };
 
+  // ── Phase : Verrou ──
+  if (phase === "locked") {
+    return (
+      <div style={{ textAlign: "center" }}>
+        <p style={{ marginBottom: "1.5rem", lineHeight: 1.7, color: "var(--ink-light)" }}>
+          {stage.description}
+        </p>
+
+        <div style={{
+          background: "rgba(139,26,26,0.06)", border: "2px solid rgba(139,26,26,0.15)",
+          borderRadius: 8, padding: "1.5rem", marginBottom: "1.5rem",
+          maxWidth: 380, margin: "0 auto",
+        }}>
+          <div style={{ fontSize: "2.5rem", marginBottom: "0.8rem" }}>🔒</div>
+          <p style={{ fontSize: "0.9rem", opacity: 0.7, marginBottom: "1.2rem", lineHeight: 1.6 }}>
+            Ce sceau est verrouillé. Entre le code d'accès pour débloquer l'épreuve.
+          </p>
+
+          <div style={{ animation: codeError ? "shake 0.4s ease" : "none" }}>
+            <input
+              className="input-ninja"
+              type="text"
+              placeholder="Code d'accès..."
+              value={accessCode}
+              onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
+              onKeyDown={(e) => e.key === "Enter" && handleAccessCode()}
+              style={{
+                marginBottom: "1rem",
+                fontSize: "1.2rem",
+                letterSpacing: 4,
+                borderColor: codeError ? "#e53935" : undefined,
+              }}
+              disabled={codeLoading}
+            />
+          </div>
+
+          <button
+            className="btn-ninja"
+            onClick={handleAccessCode}
+            style={{ width: "100%" }}
+            disabled={codeLoading}
+          >
+            {codeLoading ? "Vérification..." : "Briser le Verrou"}
+          </button>
+
+          {codeError && (
+            <p style={{ color: "#e53935", marginTop: "0.8rem", fontSize: "0.9rem" }}>
+              ❌ Code incorrect. Le sceau résiste.
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Phase : Jeu de mémoire ──
   return (
     <div style={{ textAlign: "center" }}>
-      <p style={{ marginBottom: "1.5rem", lineHeight: 1.7, color: "var(--ink-light)" }}>{stage.description}</p>
+      <p style={{ marginBottom: "1.5rem", lineHeight: 1.7, color: "var(--ink-light)" }}>
+        Le verrou est brisé ! Reproduis maintenant la séquence exacte de mudras pour briser le sceau définitivement.
+      </p>
 
       {phase === "ready" && (
         <div style={{ animation: "fadeIn 0.4s ease" }}>

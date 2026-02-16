@@ -52,7 +52,7 @@ export default function StagePage({ stage, completedStages, playerId, onComplete
     switch (stage.type) {
       case "code": return <CodeStage stage={stage} onSubmit={handleSubmit} />;
       case "cipher": return <CipherStage stage={stage} onSubmit={handleSubmit} />;
-      case "memory": return <MemoryStage stage={stage} onSubmit={handleSubmit} />;
+      case "memory": return <MemoryStage stage={stage} playerId={playerId} onSubmit={handleSubmit} />;
       case "puzzle": return <PuzzleStage stage={stage} onSubmit={handleSubmit} />;
       case "riddle": return <RiddleStage stage={stage} onSubmit={handleSubmit} />;
       case "final": return <FinalStage stage={stage} completedStages={completedStages} playerId={playerId} onSubmit={handleSubmit} />;
